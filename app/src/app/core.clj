@@ -1,6 +1,21 @@
-(ns app.core)
+(ns app.core
+  (:require
+    [app.system :as system]
+    [com.stuartsierra.component :as component]
+    [app.utils])
+  (:gen-class))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+(defonce system (atom nil))
+
+(defn start
+  "Starting the webapp"
+  []
+  (->> (system/create-system)
+       (component/start-system)
+       (reset! system)))
+
+(defn -main
+  "starts service"
+  [& args]
+  (do (app.utils/read-config-true-flat)
+      (start)))
