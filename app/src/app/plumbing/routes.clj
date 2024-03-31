@@ -3,7 +3,7 @@
     [reitit.ring :as ring]
     [app.utils :refer :all]
     [app.commons.web :as web]
-    [app.anov.view.routes :as anov]))
+    [app.anov.routes :as anov]))
 
 (defn api-check
   "Helper function for testing api"

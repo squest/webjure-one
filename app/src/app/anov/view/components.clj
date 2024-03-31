@@ -16,38 +16,53 @@
             :integrity   "sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             :crossorigin "anonymous"}])
 
-;; My side mostly the navigation is on the left side, with each link having an icon
-;; The sidebar consists of the following links:
-;; Home, Boog ideas, Book Generator, Manage books, Author profile
+;; dude gue mau bikin basic components buat website gue, ada header, footer, sidebar, sama main content
+;; nah gue butuh elo bikinin component header, footer, sama sidebar aja (isinya links)
+;; tapi udah masuk ke bagian html body ya, bukan head ya
 
-(defn sidebar [userId]
-  [:div {:class "d-flex flex-column p-3 text-white bg-dark"}
-   [:a {:href "#"}
-    [:img {:src "/img/logo.png" :alt "Logo" :class "d-block mx-auto mb-4"}]]
-   [:ul {:class "nav nav-pills flex-column mb-auto"}
-    [:li {:class "nav-item"} [:a {:href "#" :class "nav-link active"} [:i {:class "bi bi-house-door"}] " Home"]]
-    [:li {:class "nav-item"} [:a {:href "#" :class "nav-link"} [:i {:class "bi bi-lightbulb"}] " Book Ideas"]]
-    [:li {:class "nav-item"} [:a {:href "#" :class "nav-link"} [:i {:class "bi bi-book"}] " Book Generator"]]
-    [:li {:class "nav-item"} [:a {:href "#" :class "nav-link"} [:i {:class "bi bi-book-half"}] " Manage Books"]]
-    [:li {:class "nav-item"} [:a {:href "#" :class "nav-link"} [:i {:class "bi bi-person"}] " Author Profile"]]]])
+;; nah skrg gue butuh untuk bagian head html yg include bootstrap js and css di atas, pake hiccup whatever
 
-;; The main content of the page is on the right side, this is where the user will see the content
-;; The main content consists of the following:
-;; The title of the page, the content of the page, and the footer of the page
+(defn head
+  "Head component"
+  []
+  [:head
+   [:meta {:charset "utf-8"}]
+   [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
+   [:title "Starter Template for Bootstrap"]
+   boostrap-css])
 
-(defn footer []
-  [:footer {:class "footer mt-auto py-3 bg-light"}
-   [:div {:class "container"} [:span {:class "text-muted text-center"} "Place sticky footer content here."]]])
+(defn header
+  "Header component"
+  []
+  [:nav.navbar.navbar-expand-lg.navbar-light.bg-light
+   [:div.container-fluid
+    [:a.navbar-brand {:href "#"} "Navbar"]
+    [:button.navbar-toggler {:type        "button"
+                             :data-bs-toggle "collapse"
+                             :data-bs-target "#navbarNav"
+                             :aria-controls "navbarNav"
+                             :aria-expanded "false"
+                             :aria-label    "Toggle navigation"}
+     [:span.navbar-toggler-icon]]]])
 
-;; The footer of the page is at the bottom of the page, this is where the user will see the footer
-;; The footer consists of the following:
-;; The footer of the page
+(defn footer
+  "Footer component"
+  []
+  [:footer.footer.bg-light
+   [:div.container-fluid
+    [:span.text-muted "Place sticky footer content here."]]
+   boostrap-js])
 
-(defn main-content []
-  [:div {:class "col"}
-   [:h1 "Hello, world!"]
-   [:p "This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information."]
-   [:p "It uses utility classes for typography and spacing to space content out within the larger container."]
-   (footer)])
-
-
+(defn sidebar
+  "Sidebar component"
+  []
+  [:div.sidebar
+   [:ul.nav.flex-column
+    [:li.nav-item
+     [:a.nav-link {:href "#"} "Active"]]
+    [:li.nav-item
+     [:a.nav-link {:href "#"} "Link"]]
+    [:li.nav-item
+     [:a.nav-link {:href "#"} "Link"]]
+    [:li.nav-item
+     [:a.nav-link {:href "#"} "Disabled" {:tabindex "-1" :aria-disabled "true"}]]]])

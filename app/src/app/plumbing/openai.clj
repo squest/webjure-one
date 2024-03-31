@@ -13,7 +13,7 @@
     (info "Starting the openai component")
     (info "Openai started")
     (assoc this
-      :gen-fn (fn [model messages]
+      :gen-fn (fn [{:keys [model messages]}]
                 (generate {:model model
                            :openai-url openai-url
                            :messages messages
