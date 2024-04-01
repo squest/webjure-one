@@ -19,7 +19,7 @@
   "Generate content of a section"
   [openai article-data {:keys [title description] :as section-data}]
   (let [gen-fn (:gen-fn openai)
-        result (gen-fn {:model    :gpt-3
+        result (gen-fn {:model    :gpt-4
                         :messages (gen-content-prompts
                                     {:title       title
                                      :description description
@@ -38,7 +38,11 @@
    {:role    "assistant"
     :content "Ok, gue bantu di bagian mana?"}
    {:role    "user"
-    :content (str "Gue mau elo tulis penjelasan di bagian ini " title ". Isinya section yg elo tulis itu begini " description)}
+    :content (str "Gue mau elo tulis penjelasan di bagian ini " title ". Ini targetnya buat pembaca " description)}
+   {:role "assistant"
+    :content "Terus ini mesti gue apain lagi?"}
+   {:role "user"
+    :content "Gue pengen elo kembangin target tadi jadi article panjang minimal 1500 kata, dan kalo perlu ada contoh2xnya, terus kalo butuh code juga kasih yg banyak, pokoknya sampe yg baca beneran bisa ngerti or nguasain yg gue tulis di atas"}
    {:role    "assistant"
     :content "Ok, bahasanya gimana?"}
    {:role    "user"
@@ -46,7 +50,7 @@
    {:role    "assistant"
     :content "Ok, formatnya gimana?"}
    {:role    "user"
-    :content "Formatnya json, isinya :section-title & :section-content, di section-content elo tulis penjelasan elo dengan format html, kalo elo kasih
+    :content "Formatnya json, isinya :section-title & :section-content, di section-content elo tulis article yg elo bikin dan elaborasi jadi panjang dengan format html, kalo elo kasih
      contoh coding elo kasih format code block di html-nya yak"}])
 
 (defn gen-section-prompts

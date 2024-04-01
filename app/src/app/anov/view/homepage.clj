@@ -1,8 +1,10 @@
 (ns app.anov.view.homepage
   (:require
+    [app.anov.logic.db :as db]
     [hiccup2.core :as h]
     [app.utils :refer :all]
-    [app.anov.view.components :as com]))
+    [app.anov.view.components :as com]
+    [hiccup.util :as util]))
 
 ;; Jadi homepagenya hellow world aja, tapi udah pake component yg ada di com ya
 
@@ -25,6 +27,7 @@
 (defn request-form
   "Request form"
   [db openai request]
+  ;; (db/fix-db db)
   (try
     (str (h/html
            (com/head)
@@ -81,9 +84,10 @@
               [:div.col-md-9
                [:h1 "List of generated articles"]
                [:ul
-                [:li [:a {:href "/anov/article/1"} "Article 1"]]
-                [:li [:a {:href "/anov/article/2"} "Article 2"]]
-                [:li [:a {:href "/anov/article/3"} "Article 3"]]]]]
+                (let [articles (db/all-articles db)]
+                  (for [article articles]
+                    [:li [:a {:href (str "/anov/article/" (:_id article))}
+                          (:title article)]]))]]]
              [:div.row (com/footer)]]]))
     (catch Exception e
       (error e))))
@@ -91,19 +95,28 @@
 (defn article-detail
   "Article detail"
   [db openai request]
-  (try
-    (str (h/html
-           (com/head)
-           [:body
-            [:div.container
-             [:div.row (com/header)]
-             [:div.row
-              [:div.col-md-3 (com/sidebar)]
-              [:div.col-md-9
-               [:h1 "Article 1"]
-               [:p "This is the content of article 1"]]]
-             [:div.row (com/footer)]]]))
-    (catch Exception e
-      (error e))))
+  (let [article-id (get-in request [:path-params :id])
+        article (db/get-article db article-id)
+        sections (get-in article [:sections])]
+    ;; (db/fix-db db)
+    (info "Jumlah sections di article " (:title article) " : " (count sections) " " (now))
+    (pres (map keys sections))
+    (try
+      (str (h/html
+             (com/head)
+             [:body
+              [:div.container
+               [:div.row (com/header)]
+               [:div.row
+                [:div.col-md-3 (com/sidebar)]
+                [:div.col-md-9
+                 [:h2 (:title article)]
+                 (for [section (sort-by :order < sections)]
+                   [:div
+                    [:h3 (:section-title section)]
+                    [:div (util/raw-string (:section-content section))]])]]
+               [:div.row (com/footer)]]]))
+      (catch Exception e
+        (error e)))))
 
 

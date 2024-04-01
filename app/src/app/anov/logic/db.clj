@@ -1,5 +1,6 @@
 (ns app.anov.logic.db
   (:require [app.utils :refer :all]
+            [clojure.string :as cs]
             [monger.collection :as mc]))
 
 (defn add-article
@@ -23,4 +24,32 @@
 (defn get-article
   [db article-id]
   (mc/find-map-by-id (:db db) "articles" article-id))
+
+(defn all-articles
+  "Get all articles from db, but only _id, complete?, and title"
+  [db]
+  (mc/find-maps (:db db) "articles" {} [:_id :complete? :title]))
+
+;; &lt;/pre&gt;
+
+(defn fix-db
+  [db]
+  (try (let [articles (mc/find-maps (:db db) "articles" {})]
+         (doseq [article articles]
+           (let [updated (let [sections (:sections article)]
+                           (-> (for [section (->> (remove empty? sections)
+                                                  (filter #(string? (:section-content %))))]
+                                 {:section-title   (:section-title section)
+                                  :section-content (let [res (-> (cs/replace (:section-content section) #"&lt;" "<")
+                                                                 (cs/replace #"&gt;" ">"))]
+                                                     (pres res)
+                                                     res)
+                                  :order           (:order section)})
+                               vec))]
+             (mc/update-by-id (:db db) "articles" (:_id article) (merge article
+                                                                        {:n-sections (count updated)}
+                                                                        {:sections updated})))))
+       (catch Exception e
+         (error e))))
+
 
