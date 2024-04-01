@@ -13,10 +13,12 @@
    :body    {:status  "ok"
              :message "API is running fine"}})
 
-(defn anov-view
-  "Routes for anov frontend"
-  [db openai midware]
-  (anov/view-routes db openai midware))
+(defn api-midware
+  "Midleware for api"
+  [fun db openai request]
+  (merge {:status  200
+          :headers {"Content-Type" "application/json"}}
+         (fun db openai request)))
 
 (defn health-check
   [db]
@@ -28,6 +30,7 @@
   (ring/router
     [["/" {:get (partial api-check db)}]
      (health-check db)
-     (anov-view db openai web/frontware-view)]))
+     (anov/view-routes db openai web/frontware-view)
+     (anov/api-routes db openai api-midware)]))
 
 

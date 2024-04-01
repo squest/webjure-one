@@ -12,12 +12,17 @@
   (start [this]
     (info "Starting the openai component")
     (info "Openai started")
+    (info "Openai URL: " openai-url)
+    (info "Openai Token: " api-token)
     (assoc this
       :gen-fn (fn [{:keys [model messages]}]
-                (generate {:model model
-                           :openai-url openai-url
-                           :messages messages
-                           :api-token api-token}))))
+                (info "Generating from openai")
+                (let [send-to-openai {:model      model
+                                      :openai-url openai-url
+                                      :messages   messages
+                                      :api-token  api-token}]
+                  (pres send-to-openai)
+                  (generate send-to-openai)))))
   (stop [this]
     (info "Openai stopped")
     this))
@@ -40,7 +45,7 @@
 
 (defn generate
   "Just call this one to generate the response from openAI"
-  [{:keys [model openai-url messages token]}]
+  [{:keys [model openai-url messages api-token]}]
   (let [resp (->> {:model           (models model)
                    :messages        messages
                    :response_format {:type "json_object"}
@@ -48,7 +53,7 @@
                    :temperature     0.21
                    :n               1}
                   (json/generate-string)
-                  (assoc (base-request token) :body)
+                  (assoc (base-request api-token) :body)
                   (http/post openai-url))
         resp1 (-> (:body resp)
                   (json/parse-string true))]

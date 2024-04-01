@@ -46,9 +46,8 @@
    {:role    "assistant"
     :content "Ok, formatnya gimana?"}
    {:role    "user"
-    :content "Formatnya json, isinya :section-title & :section-content, di section-content elo tulis penjelasan elo dengan format html"}])
-
-
+    :content "Formatnya json, isinya :section-title & :section-content, di section-content elo tulis penjelasan elo dengan format html, kalo elo kasih
+     contoh coding elo kasih format code block di html-nya yak"}])
 
 (defn gen-section-prompts
   "Generate prompts for sections"

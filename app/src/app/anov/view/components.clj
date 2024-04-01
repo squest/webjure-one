@@ -36,14 +36,7 @@
   []
   [:nav.navbar.navbar-expand-lg.navbar-light.bg-light
    [:div.container-fluid
-    [:a.navbar-brand {:href "#"} "Navbar"]
-    [:button.navbar-toggler {:type        "button"
-                             :data-bs-toggle "collapse"
-                             :data-bs-target "#navbarNav"
-                             :aria-controls "navbarNav"
-                             :aria-expanded "false"
-                             :aria-label    "Toggle navigation"}
-     [:span.navbar-toggler-icon]]]])
+    [:a.navbar-brand {:href "#"} "Article generator"]]])
 
 (defn footer
   "Footer component"
@@ -59,10 +52,10 @@
   [:div.sidebar
    [:ul.nav.flex-column
     [:li.nav-item
-     [:a.nav-link {:href "#"} "Active"]]
+     [:a.nav-link {:href "/anov"} "Home"]]
     [:li.nav-item
-     [:a.nav-link {:href "#"} "Link"]]
+     [:a.nav-link {:href "/anov/request"} "Request an article"]]
     [:li.nav-item
-     [:a.nav-link {:href "#"} "Link"]]
+     [:a.nav-link {:href "/anov/articles"} "Generated articles"]]
     [:li.nav-item
-     [:a.nav-link {:href "#"} "Disabled" {:tabindex "-1" :aria-disabled "true"}]]]])
+     [:a.nav-link {:href "/anov/credits"} "Credits"]]]])
